@@ -1,12 +1,11 @@
 
 name: Build iOS (Unsigned)
 
-on:
-  workflow_dispatch: # Questo permette di avviare la compilazione manualmente con un click
+on: workflow_dispatch
 
 jobs:
   build:
-    runs-on: macos-latest # Usa una macchina Mac gratuita
+    runs-on: macos-latest
 
     steps:
       - name: Checkout del codice
