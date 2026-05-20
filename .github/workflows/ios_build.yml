@@ -1,1 +1,36 @@
 
+name: Build iOS (Unsigned)
+
+on:
+  workflow_dispatch: # Questo permette di avviare la compilazione manualmente con un click
+
+jobs:
+  build:
+    runs-on: macos-latest # Usa una macchina Mac gratuita
+
+    steps:
+      - name: Checkout del codice
+        uses: actions/checkout@v4
+
+      - name: Setup di Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Scarica le dipendenze
+        run: flutter pub get
+
+      - name: Compila per iOS (senza firma)
+        run: flutter build ios --release --no-codesign
+
+      - name: Prepara il file .ipa
+        run: |
+          mkdir Payload
+          mv build/ios/iphoneos/Runner.app Payload/
+          zip -r app.ipa Payload
+
+      - name: Salva il file generato
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-app-unsigned
+          path: app.ipa
